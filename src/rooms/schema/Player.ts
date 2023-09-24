@@ -4,4 +4,5 @@ class Player extends Schema {
    @type ('string') id : string;
    @type('int64') cash : number;
    @type('string') whereSkin : string;
+
 }

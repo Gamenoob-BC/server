@@ -1,29 +1,37 @@
 import { Server } from 'colyseus';
 import express from 'express';
+import http from 'http';
 import { MongoClient, Db } from 'mongodb';
 import { GameRoom } from './rooms/GameRoom'; // Replace with the correct path to your GameRoom class
 
 const app = express();
+const httpServer = http.createServer(app); // Create an HTTP server
 const gameServer = new Server({
-  server: app,
+  server: httpServer, // Use httpServer here
 });
 
+const PORT = process.env.PORT || 5800; // Set the port to 5800
 
-
+const mongoClient = new MongoClient('mongodb://localhost:27017', {
+  // You can configure the MongoClient options without TypeScript type definitions
+  // For example, you can set useUnifiedTopology directly in the options object
+  // @ts-ignore
+  useNewUrlParser: true,
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  useUnifiedTopology: true,
+});
 
 async function connectToMongo() {
   try {
     await mongoClient.connect();
     console.log('Connected to MongoDB');
 
-    // Access the MongoDB database
     const db: Db = mongoClient.db('yourDatabaseName');
 
-    // Create an instance of your GameRoom, passing the MongoDB database connection
-    const gameRoom = new GameRoom(db);
+    const room = new GameRoom(db);
 
-    // Register your GameRoom with Colyseus
-    gameServer.define('game', gameRoom);
+    gameServer.define('game', room);
 
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
@@ -31,5 +39,7 @@ async function connectToMongo() {
 }
 
 connectToMongo().then(() => {
-  gameServer.listen(3000);
+  httpServer.listen(PORT, () => {
+    console.log(`Colyseus server is running on port ${PORT}`);
+  });
 });

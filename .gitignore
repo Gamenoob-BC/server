@@ -1,2 +1,4 @@
 node_modules/ 
 CS/
+# Local Netlify folder
+.netlify

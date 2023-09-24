@@ -29,9 +29,7 @@ async function connectToMongo() {
 
     const db: Db = mongoClient.db('yourDatabaseName');
 
-    const room = new GameRoom(db);
-
-    gameServer.define('game', room);
+    gameServer.define('room', GameRoom);
 
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);

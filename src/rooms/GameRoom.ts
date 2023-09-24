@@ -5,6 +5,7 @@ interface UserData{
   name: string,
   cash: number,
   id: string,
+  whereSkin: string,
 }
 
 export class GameRoom extends Room<RoomState> {
@@ -25,14 +26,15 @@ export class GameRoom extends Room<RoomState> {
   }
 
   async onJoin (client: Client, options: any) {
-    const {name, id, cash} = options;
+    const {name, id, cash, whereSkin} = options;
     try{
-      const playerData = await this.allPlayers.findOne({name, id, cash});
+      const playerData = await this.allPlayers.findOne({name, id, cash, whereSkin});
       if (!playerData){
         const newPlayer:UserData = {
           name: name,
           id: generateRandomId(),
           cash: 0,
+          whereSkin: whereSkin,
         }
         await this.allPlayers.insertOne(newPlayer);
 

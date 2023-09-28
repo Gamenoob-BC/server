@@ -10,7 +10,7 @@ const gameServer = new Server({
   server: httpServer, // Use httpServer here
 });
 
-const PORT = process.env.PORT || 5800; // Set the port to 5800
+const PORT = Number(process.env.PORT || 5800); // Set the port to 5800
 
 const mongoClient = new MongoClient('mongodb://localhost:27017', {
   // You can configure the MongoClient options without TypeScript type definitions
